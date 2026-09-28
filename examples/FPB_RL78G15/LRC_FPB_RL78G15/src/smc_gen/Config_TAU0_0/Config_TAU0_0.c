@@ -55,7 +55,7 @@ void R_Config_TAU0_0_Create(void)
     /* TAU00 used as interval timer */
     TMR00 = _0000_TAU_CLOCK_SELECT_CKM0 | _0000_TAU_CLOCK_MODE_CKS | _0000_TAU_TRIGGER_SOFTWARE | 
             _0000_TAU_MODE_INTERVAL_TIMER | _0001_TAU_START_INT_USED;
-    TDR00 = _18FF_TAU_TDR00_VALUE;
+    TDR00 = _31FF_TAU_TDR00_VALUE;
     TO0L &= (uint8_t)~_01_TAU_CH0_OUTPUT_VALUE_1;
     TOE0L_bit.no0 = 0U;    /* disables timer output */
 

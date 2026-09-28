@@ -47,7 +47,7 @@ void R_Config_UART0_Create(void)
     uint8_t temp = SPS0L;
 
     temp &= _F0_SAU_CK00_CLEAR;
-    temp |= _02_SAU_CK00_FCLK_2;
+    temp |= _00_SAU_CK00_FCLK_0;
     SPS0L = temp;
     ST0L_bit.no0 = 1U;    /* disable UART0 transmit */
     ST0L_bit.no1 = 1U;    /* disable UART0 receive */
@@ -70,14 +70,14 @@ void R_Config_UART0_Create(void)
             _0002_SAU_MODE_UART | _0001_SAU_BUFFER_EMPTY;
     SCR00 = _0004_SAU_SCRMN_INITIALVALUE | _8000_SAU_TRANSMISSION | _0000_SAU_INTSRE_MASK | _0000_SAU_PARITY_NONE | 
             _0080_SAU_LSB | _0010_SAU_STOP_1 | _0003_SAU_LENGTH_8;
-    SDR00 = _1800_SAU0_CH0_TRANSMIT_DIVISOR;
+    SDR00 = _0800_SAU0_CH0_TRANSMIT_DIVISOR;
     NFEN0_bit.no0 = 1U;    /* RXD0 noise filter on */
     SIR01L = _04_SAU_SIRMN_FECTMN | _02_SAU_SIRMN_PECTMN | _01_SAU_SIRMN_OVCTMN;    /* clear error flag */
     SMR01 = _0020_SAU_SMRMN_INITIALVALUE | _0000_SAU_CLOCK_SELECT_CK00 | _0100_SAU_TRIGGER_RXD | _0000_SAU_EDGE_FALL | 
             _0002_SAU_MODE_UART | _0000_SAU_TRANSFER_END;
     SCR01 = _0004_SAU_SCRMN_INITIALVALUE | _4000_SAU_RECEPTION | _0400_SAU_INTSRE_ENABLE | _0000_SAU_PARITY_NONE | 
             _0080_SAU_LSB | _0010_SAU_STOP_1 | _0003_SAU_LENGTH_8;
-    SDR01 = _1800_SAU0_CH1_RECEIVE_DIVISOR;
+    SDR01 = _0800_SAU0_CH1_RECEIVE_DIVISOR;
     SO0 |= _0001_SAU_CH0_DATA_OUTPUT_1;
     SOL0L |= _00_SAU_CHANNEL0_NORMAL;    /* output level normal */
     SOE0L_bit.no0 = 1U;    /* enable UART0 output */

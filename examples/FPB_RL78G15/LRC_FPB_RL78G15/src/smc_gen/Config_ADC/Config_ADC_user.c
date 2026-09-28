@@ -58,6 +58,8 @@ void R_Config_ADC_Create_UserInit(void)
 static void __near r_Config_ADC_interrupt(void)
 {
     /* Start user code for r_Config_ADC_interrupt. Do not edit comment generated here */
+	P2 |= 1U;
+
 	/* Grab the sample, 10b ADC reading in 16bit register is left justified on RL78/G15, so right justify it and cast to sample type (32bit)*/
 	lrc_channel.inputs.i_sample = (spl_t)((uint16_t)(ADCR >> 6U));
 
@@ -73,6 +75,8 @@ static void __near r_Config_ADC_interrupt(void)
 	LRC_CB_ADC();
 
 	adc_ready = true;
+
+	P2 &= ~1U;
     /* End user code. Do not edit comment generated here */
 }
 

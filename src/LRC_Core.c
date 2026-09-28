@@ -191,13 +191,14 @@ void LRC_CB_ADC(void)
     /****************************************************
      * UPDATE ACCUMULATORS & MEASUREMENTS
      ****************************************************/
+#if 0
     /* MEAN*/
     p_channel->dc_data.sum -= (acc_t)p_channel->window.spl_buffer[p_channel->window.rd_idx];
     p_channel->dc_data.sum += (acc_t)p_channel->window.spl_buffer[p_channel->window.wr_idx];
     p_channel->dc_data.raw_output = (fxp_t)((acc_t)(p_channel->dc_data.sum / (LRC_WINDOW_BUFFER_SIZE)));
     p_channel->dc_data.raw_output <<= FXP_FRAC_BITS;
     p_channel->dc_data.output = LRC_FXP_DIV(p_channel->dc_data.raw_output, p_channel->fp_coefficient);
-
+#endif
     /* RMS*/
     p_channel->ac_data.sum -= (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.rd_idx]);
     p_channel->ac_data.sum += (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.wr_idx]);
