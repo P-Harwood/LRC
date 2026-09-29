@@ -10,7 +10,7 @@
             </toolchain>
         </configuration>
         <platform id="R5F12068xSP"/>
-        <option id="board" value="RL78G15_FastPrototypingBoard (V1.00)"/>
+        <option id="board" value="RL78G15_FastPrototypingBoard (V1.01)"/>
     </general>
     <tool id="Clock">
         <option enabled="true" id="operationModeComb" selection="vdd27">

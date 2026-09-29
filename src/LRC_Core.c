@@ -135,15 +135,15 @@ void LRC_ChannelRegister(LRC_Channel *const p_channel)
 
 fxp_t LRC_ChannelCoeffCompute(LRC_Channel *const p_channel, const float i_ref)
 {
-  LRC_CRITICAL_SECTION_PREPARE();
-  const fxp_t scaled_i_ref = LRC_FLOAT_TO_FXP(i_ref);
   fxp_t rms_raw_snapshot = 0;
 
+  LRC_CRITICAL_SECTION_PREPARE();
   LRC_CRITICAL_SECTION_ENTER();
+
   rms_raw_snapshot = p_channel->ac_data.raw_output;
   LRC_CRITICAL_SECTION_EXIT();
 
-  return LRC_FXP_DIV(rms_raw_snapshot, scaled_i_ref);
+  return (fxp_t)((float)rms_raw_snapshot / i_ref);
 }
 
 void LRC_ChannelCoeffSet(LRC_Channel *const p_channel, const fxp_t coeff)
@@ -202,9 +202,13 @@ void LRC_CB_ADC(void)
     /* RMS*/
     p_channel->ac_data.sum -= (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.rd_idx]);
     p_channel->ac_data.sum += (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.wr_idx]);
-    p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc(p_channel->ac_data.sum / (LRC_WINDOW_BUFFER_SIZE));
-    p_channel->ac_data.raw_output <<= FXP_FRAC_BITS;
-    p_channel->ac_data.output = LRC_FXP_DIV(p_channel->ac_data.raw_output, p_channel->fp_coefficient);
+
+
+    p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc((p_channel->ac_data.sum << 6) / (uint32_t)LRC_WINDOW_BUFFER_SIZE);
+    p_channel->ac_data.raw_output <<= (FXP_FRAC_BITS - 3);
+    // Shift coefficient by Fixed point bits
+    p_channel->ac_data.output = p_channel->ac_data.raw_output / (p_channel->fp_coefficient >> FXP_FRAC_BITS);
+
 
     /* Post processing of AC sample, if applicable*/
     LRC_RMS_Computation_Hook(&(p_channel->ac_data.output));

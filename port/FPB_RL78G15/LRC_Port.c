@@ -22,19 +22,18 @@ void LRC_RMS_Computation_Hook(fxp_t *p_rms)
   /* TODO: Populate*/
 }
 
-spl_t LRC_SqrSpl(spl_t spl)
+uint32_t LRC_SqrSpl(spl_t spl)
 {
-  return spl * spl;
+  return (uint32_t)spl * spl;
 }
 
 acc_t LRC_SqrtAcc(acc_t acc)
 {
-  uint64_t rem = 0, root = 0, acc_tmp = (uint64_t)acc;
-
-  for (uint8_t i = 32; i > 0; i--)
+  uint32_t rem = 0, root = 0, acc_tmp = (uint32_t)acc;
+  for (uint8_t i = 16; i > 0; i--)
   {
     root <<= 1;
-    rem = (rem << 2) | (acc_tmp >> (64 - 2));
+    rem = (rem << 2) | (acc_tmp >> (30));
     acc_tmp <<= 2;
     if (root < rem)
     {
@@ -42,7 +41,7 @@ acc_t LRC_SqrtAcc(acc_t acc)
       root += 2;
     }
   }
-  return (uint32_t)(root >> 1);
+  return (acc_t)(root >> 1);
 }
 
 void LRC_Trip(LRC_Channel *p_channel)

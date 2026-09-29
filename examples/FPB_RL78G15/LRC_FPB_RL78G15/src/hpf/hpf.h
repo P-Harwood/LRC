@@ -16,7 +16,7 @@ typedef struct Hpf_str
 {
   int32_t prev_input;
   int32_t prev_output;
-  int64_t state;
+  int32_t state;
   bool run_already;
 } Hpf;
 

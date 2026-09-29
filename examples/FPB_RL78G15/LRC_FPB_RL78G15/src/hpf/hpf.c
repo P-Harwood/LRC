@@ -17,17 +17,15 @@ int32_t Hpf_run(Hpf *p_hpf, int32_t input)
 
         p_hpf->prev_input      = input;
         p_hpf->prev_output     = 0L;
-        p_hpf->state = 0LL;
+        p_hpf->state = 0L;
     }
     else
     {
-        p_hpf->state = ((int64_t)HPF_A_Q16 *
-                (p_hpf->state +
-                 (((int64_t)input -
-                   (int64_t)p_hpf->prev_input) << 16L)))
-            >> 16;
-        p_hpf->prev_input = input;
-        p_hpf->prev_output = (int32_t)(p_hpf->state >> 16L);
+        int32_t sum = p_hpf->state + ((input - p_hpf->prev_input) << 16);
+
+        p_hpf->state       = sum - (sum >> 7);
+        p_hpf->prev_input  = input;
+        p_hpf->prev_output = p_hpf->state >> 16;
     }
 
     return p_hpf->prev_output;
@@ -37,6 +35,6 @@ void Hpf_reset(Hpf *p_hpf)
 {
     p_hpf->prev_input = 0L;
     p_hpf->prev_output = 0L;
-    p_hpf->state = 0LL;
+    p_hpf->state = 0L;
     p_hpf->run_already = false;
 }

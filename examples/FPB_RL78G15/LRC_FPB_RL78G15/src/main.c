@@ -52,11 +52,11 @@ static LRC_Config lrc_cfg = {
 LRC_Channel lrc_channel;
 
 uint8_t g_rx_buf[2U] = {0U, 0U};
-bool transmit_meta = false;
+volatile bool transmit_meta = false;
 uint8_t uart_buffer[32] = {0,};
 csvbin_t csvbuf;
-bool adc_ready = false;
-bool sw_pressed = false;
+volatile bool adc_ready = false;
+volatile bool sw_pressed = false;
 Hpf l_hpf;
 
 /** @brief Initialises dataflash for writing & reading later*/
@@ -124,20 +124,23 @@ void main(void)
       /* Transmit new data if ADC reading completed*/
       if(adc_ready)
       {
-    	  static volatile spl_t adc = 0;
-    	  static volatile fxp_t rms = 0;
+  		static volatile int32_t adc = 0;
+		static volatile fxp_t rms = 0;
 
-    	  adc = lrc_channel.inputs.i_sample;
-    	  rms = lrc_channel.ac_data.output;
-    	  adc_ready = false;
+		LRC_CRITICAL_SECTION_PREPARE();
+		LRC_CRITICAL_SECTION_ENTER();
+		adc = lrc_channel.inputs.i_sample;
+		rms = lrc_channel.ac_data.output;
+		adc_ready = false;
+		LRC_CRITICAL_SECTION_EXIT();
 
-    	  /* Add data fields*/
-    	  Csvbin_add_field(&csvbuf, (uint8_t*)&adc, sizeof(spl_t));
-          Csvbin_add_field(&csvbuf, (uint8_t*)&rms, sizeof(fxp_t));
+		/* Add data fields*/
+		Csvbin_add_field(&csvbuf, (uint8_t*)&adc, sizeof(adc));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&rms, sizeof(fxp_t));
 
-          /* Terminate & Transmit*/
-          Csvbin_end_row(&csvbuf);
-          Csvbin_transmit(&csvbuf);
+		/* Terminate & Transmit*/
+		Csvbin_end_row(&csvbuf);
+		Csvbin_transmit(&csvbuf);
       }
   }
 }

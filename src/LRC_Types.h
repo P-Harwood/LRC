@@ -33,6 +33,8 @@
  */
 #define LRC_WINDOW_BUFFER_SIZE (101U)
 
+#define ADC_BIT_SHIFT 8U /* Drop the first two bits */
+
 /** @brief Raw ADC sample type
  * @details This type should accomodate the raw ADC sample type.
  * @note The bit width of this type needs to be able to accomodate squaring of the sample (2x sample size in bits)
@@ -40,7 +42,7 @@
  * e.g., with 10b samples & FXP_FRAC_BITS = 15, squaring gives us 10 * 2 = 20, but shifting gives us 10 + 15 = 25.
  * so the spl_t must be at least 25b
  */
-typedef int32_t spl_t;
+typedef int16_t spl_t;
 
 /** @brief Accumulator type
  * @details This type should accomodate the accumulation of the product of raw ADC sample types.
@@ -49,7 +51,7 @@ typedef int32_t spl_t;
  * It must be at least ceil(log2(LRC_WINDOW_BUFFER_SIZE)) + 25 + 15.
  * = ceil(log2(51)) + 25 + 15 = ceil(5.67) + 25 + 15 = 46b
  */
-typedef int64_t acc_t;
+typedef uint32_t acc_t;
 
 /** @}*/
 
@@ -67,7 +69,7 @@ typedef int64_t acc_t;
 /** @brief fixed point type alias
  * @details This is the size of the sample type as this is only used to store RMS, which will never exceed maximum spl_t.
  */
-typedef spl_t fxp_t;
+typedef uint32_t fxp_t;
 
 /**
  * @brief Trip characteristics
