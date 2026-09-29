@@ -49,14 +49,14 @@
  * @param[in] in - input value (floating point) for conversion to fixed point.
  * @return floating point equivalent.
  */
-#define LRC_FLOAT_TO_FXP(in) ((fxp_t)((in) * ((float)(1 << FXP_FRAC_BITS))))
+#define LRC_FLOAT_TO_FXP(in) ((fxp_t)((in) * ((float)((fxp_t)1 << FXP_FRAC_BITS))))
 
 /** @brief Helper macro to convert fixed point types to floats
  * Mainly used in logging during development or value setting in code for things like trip thresholds.
  * @param[in] in - input value (fixed point type) for conversion to float.
  * @return fixed point equivalent.
  */
-#define LRC_FXP_TO_FLOAT(in) ((float)((float)(in) / ((float)(1 << FXP_FRAC_BITS))))
+#define LRC_FXP_TO_FLOAT(in) ((float)((float)(in) / ((float)((fxp_t)1 << FXP_FRAC_BITS))))
 
 /** @brief Initialises the Light-Weight Residual Current Framework according to the config.
  * @param[in] p_config_arg - pointer to the configuration structure.

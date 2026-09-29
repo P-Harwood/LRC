@@ -89,7 +89,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/Config_INTC}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.langFileC.158609741" name="Language standard of C language (-lang)" superClass="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.langFileC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.langFileC.c99" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization.1141092898" name="Level of optimization (-O)" superClass="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization.Olite" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization.1141092898" name="Level of optimization (-O)" superClass="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrl.compiler.option.optimization.Ospeed" valueType="enumerated"/>
 								<inputType id="Base.Compiler.ccrl.C.inputType.1043944537" name="Compiler InputType" superClass="Base.Compiler.ccrl.C.inputType"/>
 								<inputType id="Base.Compiler.ccrl.Cpp.inputType.688778043" name="Compiler Input CPP" superClass="Base.Compiler.ccrl.Cpp.inputType"/>
 							</tool>

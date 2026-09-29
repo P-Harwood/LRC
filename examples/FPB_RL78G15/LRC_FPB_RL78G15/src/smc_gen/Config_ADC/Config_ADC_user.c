@@ -58,11 +58,13 @@ void R_Config_ADC_Create_UserInit(void)
 static void __near r_Config_ADC_interrupt(void)
 {
     /* Start user code for r_Config_ADC_interrupt. Do not edit comment generated here */
-	/* Grab the sample, 10b ADC reading in 16bit register is left justified on RL78/G15, so right justify it and cast to sample type (32bit)*/
-	lrc_channel.inputs.i_sample = (spl_t)((uint16_t)(ADCR >> 6U));
+	P2 |= 1U;
 
-    /* Single ended 10bit ADC, approximately remove midway bias*/
-	lrc_channel.inputs.i_sample -= 512L;
+	/* Grab the sample, 10b ADC reading in 16bit register is left justified on RL78/G15, drop unused 6 bits and first two result bits */
+	lrc_channel.inputs.i_sample = (spl_t)((uint16_t)(ADCR >> ADC_BIT_SHIFT));
+
+    /* Single ended 8 bit ADC, approximately remove midway bias*/
+	lrc_channel.inputs.i_sample -= 256	; /* adc value is max 256, remove the bias. This math relies on bias being vcc/2*/
 
 	/* High pass filter*/
 	lrc_channel.inputs.i_sample = Hpf_run(&l_hpf, lrc_channel.inputs.i_sample);
@@ -73,6 +75,8 @@ static void __near r_Config_ADC_interrupt(void)
 	LRC_CB_ADC();
 
 	adc_ready = true;
+
+	P2 &= ~1U;
     /* End user code. Do not edit comment generated here */
 }
 

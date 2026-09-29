@@ -217,7 +217,7 @@
           <Option>-cpu=S2</Option>
           <Option>-use_mda=not_use</Option>
           <Option>-c</Option>
-          <Option>-dev="C:/Users/a5126135/.eclipse/com.renesas.platform_117125690/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
+          <Option>-dev="C:/Users/a5163718/.eclipse/com.renesas.platform_1869881219/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
           <Option>-I "${ProjDirPath}\src\smc_gen\r_pincfg"</Option>
           <Option>-I "${ProjDirPath}\src\hpf"</Option>
           <Option>-I "${ProjDirPath}\src\csvbin"</Option>
@@ -246,14 +246,14 @@
           <Option>-character_set=utf8</Option>
           <Option>-g</Option>
           <Option>-o ${workspace_loc}\${ProjName}/${ConfigName}</Option>
-          <Option>-Olite</Option>
+          <Option>-Ospeed</Option>
           <Option>-lang=c99</Option>
         </CompileOptions>
         <AssembleOptions>
           <Option>-cpu=S2</Option>
           <Option>-use_mda=not_use</Option>
           <Option>-c</Option>
-          <Option>-dev="C:/Users/a5126135/.eclipse/com.renesas.platform_117125690/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
+          <Option>-dev="C:/Users/a5163718/.eclipse/com.renesas.platform_1869881219/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
           <Option>-I "${ProjDirPath}\src\smc_gen\r_pincfg"</Option>
           <Option>-I "${ProjDirPath}\src\smc_gen"</Option>
           <Option>-I "${ProjDirPath}\src\smc_gen\general"</Option>
@@ -278,7 +278,7 @@
           <Option>-o "${ProjDirPath}\${ConfigName}"</Option>
         </AssembleOptions>
         <LinkOptions>
-          <Option>-device="C:/Users/a5126135/.eclipse/com.renesas.platform_117125690/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
+          <Option>-device="C:/Users/a5163718/.eclipse/com.renesas.platform_1869881219/DebugComp/RL78/RL78/Common/DR5F12068.DVF"</Option>
           <Option>-list</Option>
           <Option>-show=all</Option>
           <Option>-nooptimize</Option>

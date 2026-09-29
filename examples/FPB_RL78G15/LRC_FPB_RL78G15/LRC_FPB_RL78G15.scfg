@@ -10,7 +10,7 @@
             </toolchain>
         </configuration>
         <platform id="R5F12068xSP"/>
-        <option id="board" value="RL78G15_FastPrototypingBoard (V1.00)"/>
+        <option id="board" value="RL78G15_FastPrototypingBoard (V1.01)"/>
     </general>
     <tool id="Clock">
         <option enabled="true" id="operationModeComb" selection="vdd27">
@@ -227,7 +227,7 @@
                     <item id="FCLK32768" input="32768" vlaue="0"/>
                 </option>
                 <option enabled="true" id="IntervalValue16bits" selection="intervalValueText16bits">
-                    <item id="intervalValueText16bits" input="400" vlaue="6399"/>
+                    <item id="intervalValueText16bits" input="800" vlaue="12799"/>
                 </option>
                 <option enabled="true" id="IntervalUnit16bits" selection="us">
                     <item id="ms" input="" vlaue="0"/>
@@ -383,7 +383,7 @@
                         <item id="CK0" input="0" vlaue="0"/>
                         <item id="CK1" input="1" vlaue="0"/>
                     </option>
-                    <option enabled="true" id="Prescaler" selection="FCLK2">
+                    <option enabled="true" id="Prescaler" selection="FCLK0">
                         <item id="FCLK0" input="1" vlaue="0"/>
                         <item id="FCLK1" input="2" vlaue="0"/>
                         <item id="FCLK2" input="4" vlaue="0"/>
@@ -429,7 +429,7 @@
                         <item id="reverse" input="" vlaue="0"/>
                     </option>
                     <option enabled="true" id="baudrateSetting" selection="input">
-                        <item id="input" input="153600" vlaue="12"/>
+                        <item id="input" input="2000000" vlaue="3"/>
                         <item id="9600" input="9600" vlaue="0"/>
                         <item id="19200" input="19200" vlaue="0"/>
                         <item id="31250" input="31250" vlaue="0"/>
@@ -455,7 +455,7 @@
                         <item id="CK0" input="0" vlaue="0"/>
                         <item id="CK1" input="1" vlaue="0"/>
                     </option>
-                    <option enabled="true" id="Prescaler" selection="FCLK2">
+                    <option enabled="true" id="Prescaler" selection="FCLK0">
                         <item id="FCLK0" input="1" vlaue="0"/>
                         <item id="FCLK1" input="2" vlaue="0"/>
                         <item id="FCLK2" input="4" vlaue="0"/>
@@ -496,7 +496,7 @@
                         <item id="reverse" input="" vlaue="0"/>
                     </option>
                     <option enabled="true" id="baudrateSetting" selection="input">
-                        <item id="input" input="153600" vlaue="12"/>
+                        <item id="input" input="2000000" vlaue="3"/>
                         <item id="9600" input="9600" vlaue="0"/>
                         <item id="19200" input="19200" vlaue="0"/>
                         <item id="31250" input="31250" vlaue="0"/>

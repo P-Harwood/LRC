@@ -117,7 +117,7 @@ void LRC_RMS_Computation_Hook(fxp_t *p_rms);
  *
  * @return square of spl
  */
-spl_t LRC_SqrSpl(spl_t spl);
+uint32_t LRC_SqrSpl(spl_t spl);
 
 /**
  * @brief performs a square root operation on the accumulator type.
