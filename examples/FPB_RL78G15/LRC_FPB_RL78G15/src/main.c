@@ -85,7 +85,7 @@ void main(void)
   /* Initialise the csvbin streamer*/
   Csvbin_init(&csvbuf, uart_buffer, 32);
   /* Set the metadata*/
-  Csvbin_set_meta(&csvbuf, "#NADC,RMS\n", "#Ti32,q17.15\n", "#Elittle\n");
+  Csvbin_set_meta(&csvbuf, "#NADC,RMS\n", "#Ti16,q17.15\n", "#Elittle\n");
   R_Config_UART0_Start();
   R_Config_UART0_Receive(g_rx_buf, 1U);
 
@@ -126,7 +126,7 @@ void main(void)
       /* Transmit new data if ADC reading completed*/
       if(adc_ready)
       {
-  		static volatile int32_t adc = 0;
+  		static volatile spl_t adc = 0;
 		static volatile fxp_t rms = 0;
 
 		LRC_CRITICAL_SECTION_PREPARE();
@@ -137,7 +137,7 @@ void main(void)
 		LRC_CRITICAL_SECTION_EXIT();
 
 		/* Add data fields*/
-		Csvbin_add_field(&csvbuf, (uint8_t*)&adc, sizeof(adc));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&adc, sizeof(spl_t));
 		Csvbin_add_field(&csvbuf, (uint8_t*)&rms, sizeof(fxp_t));
 
 		/* Terminate & Transmit*/
