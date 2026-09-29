@@ -37,6 +37,7 @@ Global variables and functions
 extern LRC_Channel lrc_channel;
 extern bool adc_ready;
 extern Hpf l_hpf;
+extern uint16_t raw_adc;
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -64,6 +65,7 @@ static void __near r_Config_ADC_interrupt(void)
 
 	/* Grab the sample, 10b ADC reading in 16bit register is left justified on RL78/G15, drop unused 6 bits and first two result bits */
 	lrc_channel.inputs.iac_sample = (spl_t)((uint16_t)(ADCR >> ADC_BIT_SHIFT));
+	raw_adc = lrc_channel.inputs.iac_sample;
 
     /* Single ended 8 bit ADC, approximately remove midway bias*/
 	lrc_channel.inputs.iac_sample -= 256	; /* adc value is max 256, remove the bias. This math relies on bias being vcc/2*/

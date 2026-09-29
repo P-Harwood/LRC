@@ -36,6 +36,8 @@
 
 #define DATAFLASH_BASE_ADDRESS (0x9000u)
 
+#define CSVBIN_BUFFER_SIZE (64)
+
 static LRC_Config lrc_cfg = {
     .ac_trip =
         {
@@ -55,10 +57,11 @@ LRC_Channel lrc_channel;
 
 uint8_t g_rx_buf[2U] = {0U, 0U};
 volatile bool transmit_meta = false;
-uint8_t uart_buffer[32] = {0,};
+uint8_t uart_buffer[CSVBIN_BUFFER_SIZE] = {0,};
 csvbin_t csvbuf;
 volatile bool adc_ready = false;
 volatile bool sw_pressed = false;
+volatile uint16_t raw_adc = 0;
 Hpf l_hpf;
 
 /** @brief Initialises dataflash for writing & reading later*/
@@ -83,9 +86,9 @@ void main(void)
 
   /* Setup csvbin*/
   /* Initialise the csvbin streamer*/
-  Csvbin_init(&csvbuf, uart_buffer, 32);
+  Csvbin_init(&csvbuf, uart_buffer, CSVBIN_BUFFER_SIZE);
   /* Set the metadata*/
-  Csvbin_set_meta(&csvbuf, "#NADC,RMS\n", "#Ti16,q17.15\n", "#Elittle\n");
+  Csvbin_set_meta(&csvbuf, "#NRAW_ADC,HPF_ADC,RMS\n", "#Tu16,i16,q17.15\n", "#Elittle\n");
   R_Config_UART0_Start();
   R_Config_UART0_Receive(g_rx_buf, 1U);
 
@@ -126,19 +129,22 @@ void main(void)
       /* Transmit new data if ADC reading completed*/
       if(adc_ready)
       {
-  		static volatile spl_t adc = 0;
-		static volatile fxp_t rms = 0;
+  		static volatile spl_t l_raw_adc = 0;
+  		static volatile spl_t l_hpf_adc = 0;
+		static volatile fxp_t l_rms = 0;
 
 		LRC_CRITICAL_SECTION_PREPARE();
 		LRC_CRITICAL_SECTION_ENTER();
-		adc = lrc_channel.inputs.iac_sample;
-		rms = lrc_channel.ac_data.output;
+		l_raw_adc = raw_adc;
+		l_hpf_adc = lrc_channel.inputs.iac_sample;
+		l_rms = lrc_channel.ac_data.output;
 		adc_ready = false;
 		LRC_CRITICAL_SECTION_EXIT();
 
 		/* Add data fields*/
-		Csvbin_add_field(&csvbuf, (uint8_t*)&adc, sizeof(spl_t));
-		Csvbin_add_field(&csvbuf, (uint8_t*)&rms, sizeof(fxp_t));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&l_raw_adc, sizeof(uint16_t));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&l_hpf_adc, sizeof(spl_t));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&l_rms, sizeof(fxp_t));
 
 		/* Terminate & Transmit*/
 		Csvbin_end_row(&csvbuf);
