@@ -429,7 +429,7 @@
                         <item id="reverse" input="" vlaue="0"/>
                     </option>
                     <option enabled="true" id="baudrateSetting" selection="input">
-                        <item id="input" input="2000000" vlaue="3"/>
+                        <item id="input" input="1600000" vlaue="4"/>
                         <item id="9600" input="9600" vlaue="0"/>
                         <item id="19200" input="19200" vlaue="0"/>
                         <item id="31250" input="31250" vlaue="0"/>
@@ -496,7 +496,7 @@
                         <item id="reverse" input="" vlaue="0"/>
                     </option>
                     <option enabled="true" id="baudrateSetting" selection="input">
-                        <item id="input" input="2000000" vlaue="3"/>
+                        <item id="input" input="1600000" vlaue="4"/>
                         <item id="9600" input="9600" vlaue="0"/>
                         <item id="19200" input="19200" vlaue="0"/>
                         <item id="31250" input="31250" vlaue="0"/>
