@@ -131,7 +131,7 @@ void main(void)
 
 		LRC_CRITICAL_SECTION_PREPARE();
 		LRC_CRITICAL_SECTION_ENTER();
-		adc = lrc_channel.inputs.i_sample;
+		adc = lrc_channel.inputs.iac_sample;
 		rms = lrc_channel.ac_data.output;
 		adc_ready = false;
 		LRC_CRITICAL_SECTION_EXIT();

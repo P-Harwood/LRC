@@ -70,6 +70,17 @@ typedef uint32_t acc_t;
 typedef uint32_t fxp_t;
 
 /**
+ * @brief Generic window structure
+ * @details Holds sample buffer window
+ */
+typedef struct LRC_Window_str
+{
+  spl_t spl_buffer[LRC_WINDOW_BUFFER_SIZE];    /**< Buffer to hold the samples */
+  uint32_t wr_idx;                             /**< Write index of the buffer*/
+  uint32_t rd_idx;                             /**< Read index of the buffer*/
+} LRC_Window;
+
+/**
  * @brief Trip characteristics
  * @details Holds information relevant to setting trip behaviour.
  */
@@ -84,6 +95,7 @@ typedef struct LRC_TripCharacteristics_str
  */
 typedef struct LRC_Measurement_str
 {
+  LRC_Window window;		  /**< Window of samples for the measurment*/
   acc_t sum;                  /**< Current accumulated value*/
   uint32_t persistence_count; /**< Counter to count the number of persistent "Over Thresholds" have ocurred*/
   fxp_t raw_output;           /**< variable to store the latest measurement computed BEFORE coefficient adjustment*/
@@ -118,19 +130,9 @@ typedef struct LRC_Channel_str
    */
   struct LRC_ChannelInputs
   {
-    spl_t i_sample; /**< Raw ADC current sample */
+    spl_t iac_sample; /**< Raw ADC current sample for AC processing*/
+    spl_t idc_sample; /**< Raw ADC current sample for DC processing*/
   } inputs;
-
-  /**
-   * @brief Generic window structure
-   * @details Holds sample buffer window
-   */
-  struct LRC_Window
-  {
-    spl_t spl_buffer[LRC_WINDOW_BUFFER_SIZE];    /**< Buffer to hold the samples */
-    uint32_t wr_idx;                             /**< Write index of the buffer*/
-    uint32_t rd_idx;                             /**< Read index of the buffer*/
-  } window;
 
   LRC_Measurement ac_data; /**< measurement information for ac data*/
 

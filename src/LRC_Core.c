@@ -34,18 +34,20 @@ static LRC_ChannelList channel_list = {NULL, (uint32_t)0}; /**< Internal measure
  */
 static void Channel_hard_reset(LRC_Channel *const p_channel)
 {
-  p_channel->inputs.i_sample = (spl_t)0;
-
-  (void)memset(p_channel->window.spl_buffer, 0, LRC_WINDOW_BUFFER_SIZE * sizeof(spl_t));
-  p_channel->window.rd_idx = 1;
-  p_channel->window.wr_idx = 0;
-
+  p_channel->inputs.iac_sample = (spl_t)0;
+  (void)memset(p_channel->ac_data.window.spl_buffer, 0, LRC_WINDOW_BUFFER_SIZE * sizeof(spl_t));
+  p_channel->ac_data.window.rd_idx = 1;
+  p_channel->ac_data.window.wr_idx = 0;
   p_channel->ac_data.sum = (acc_t)0;
   p_channel->ac_data.persistence_count = 0;
   p_channel->ac_data.raw_output = (fxp_t)0;
   p_channel->ac_data.output = (fxp_t)0;
 
 #ifdef LRC_ENABLE_DC
+  p_channel->inputs.idc_sample = (spl_t)0;
+  (void)memset(p_channel->dc_data.window.spl_buffer, 0, LRC_WINDOW_BUFFER_SIZE * sizeof(spl_t));
+  p_channel->dc_data.window.rd_idx = 1;
+  p_channel->dc_data.window.wr_idx = 0;
   p_channel->dc_data.sum = (acc_t)0;
   p_channel->dc_data.persistence_count = 0;
   p_channel->dc_data.raw_output = (fxp_t)0;
@@ -187,15 +189,11 @@ void LRC_CB_ADC(void)
   while (NULL != p_channel)
   {
     /****************************************************
-     * STORE SAMPLE IN WINDOW
-     ****************************************************/
-    p_channel->window.spl_buffer[p_channel->window.wr_idx] = p_channel->inputs.i_sample;
-
-    /****************************************************
      * UPDATE ACCUMULATORS & MEASUREMENTS
      ****************************************************/
 #ifdef LRC_ENABLE_DC
     /* MEAN*/
+	p_channel->dc_data.window.spl_buffer[p_channel->dc_data.window.wr_idx] = p_channel->inputs.idc_sample;
     p_channel->dc_data.sum -= (acc_t)p_channel->window.spl_buffer[p_channel->window.rd_idx];
     p_channel->dc_data.sum += (acc_t)p_channel->window.spl_buffer[p_channel->window.wr_idx];
     p_channel->dc_data.raw_output = (fxp_t)((acc_t)(p_channel->dc_data.sum / (LRC_WINDOW_BUFFER_SIZE)));
@@ -203,8 +201,9 @@ void LRC_CB_ADC(void)
     p_channel->dc_data.output = LRC_FXP_DIV(p_channel->dc_data.raw_output, p_channel->fp_coefficient);
 #endif
     /* RMS*/
-    p_channel->ac_data.sum -= (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.rd_idx]);
-    p_channel->ac_data.sum += (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.wr_idx]);
+    p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.wr_idx] = LRC_SqrSpl(p_channel->inputs.iac_sample);
+    p_channel->ac_data.sum -= (acc_t)p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.rd_idx];
+    p_channel->ac_data.sum += (acc_t)p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.wr_idx];
     p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc(p_channel->ac_data.sum / (LRC_WINDOW_BUFFER_SIZE));
     p_channel->ac_data.raw_output <<= FXP_FRAC_BITS;
     p_channel->ac_data.output = LRC_FXP_DIV(p_channel->ac_data.raw_output, p_channel->fp_coefficient);
@@ -224,18 +223,33 @@ void LRC_CB_ADC(void)
     /****************************************************
      * UPDATE WINDOW INDEX'S
      ****************************************************/
-    ++p_channel->window.wr_idx;
-    ++p_channel->window.rd_idx;
+    ++p_channel->ac_data.window.wr_idx;
+    ++p_channel->ac_data.window.rd_idx;
 
-    if (p_channel->window.wr_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
+    if (p_channel->ac_data.window.wr_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
     {
-      p_channel->window.wr_idx = 0;
+      p_channel->ac_data.window.wr_idx = 0;
     }
 
-    if (p_channel->window.rd_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
+    if (p_channel->ac_data.window.rd_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
     {
-      p_channel->window.rd_idx = 0;
+      p_channel->ac_data.window.rd_idx = 0;
     }
+
+#ifdef LRC_ENABLE_DC
+    ++p_channel->dc_data.window.wr_idx;
+    ++p_channel->dc_data.window.rd_idx;
+
+    if (p_channel->dc_data.window.wr_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
+    {
+      p_channel->dc_data.window.wr_idx = 0;
+    }
+
+    if (p_channel->dc_data.window.rd_idx > (LRC_WINDOW_BUFFER_SIZE - 1))
+    {
+      p_channel->dc_data.window.rd_idx = 0;
+    }
+#endif
 
     /* Next Channel*/
     p_channel = p_channel->p_next;
