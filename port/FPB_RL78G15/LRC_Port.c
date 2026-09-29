@@ -16,12 +16,6 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel)
   /* TODO: Populate*/
 }
 
-void LRC_RMS_Computation_Hook(fxp_t *p_rms)
-{
-  (void)p_rms;
-  /* TODO: Populate*/
-}
-
 spl_t LRC_SqrSpl(spl_t spl)
 {
   return spl * spl;

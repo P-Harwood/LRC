@@ -25,15 +25,6 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel)
   channel0_lpf.prev_output = 0;
 }
 
-void LRC_RMS_Computation_Hook(fxp_t *p_rms)
-{
-  static const fxp_t alpha = 0x2000;
-  fxp_t new_part = (fxp_t)((int64_t)(((int64_t)(alpha) * (int64_t)(*p_rms)) >> FXP_FRAC_BITS));
-  fxp_t old_part = (fxp_t)((int64_t)(((int64_t)(0x8000 - alpha) * (int64_t)(channel0_lpf.prev_output)) >> FXP_FRAC_BITS));
-  *p_rms = new_part + old_part;
-  channel0_lpf.prev_output = *p_rms;
-}
-
 spl_t LRC_SqrSpl(spl_t spl)
 {
   return spl * spl;

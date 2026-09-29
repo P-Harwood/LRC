@@ -100,14 +100,6 @@
  */
 void LRC_Channel_Reset_Hook(LRC_Channel *p_channel);
 
-/**
- * @brief Allows a developer to perform post processing on RMS Computations.
- * @details This is called BEFORE the trip comparisons but after RMS computation update.
- * Intended use here is to perform filtering like LPF.
- * @param[in] p_rms - pointer to the rms to work on.
- */
-void LRC_RMS_Computation_Hook(fxp_t *p_rms);
-
 /******************
  * MATHS
  ******************/
