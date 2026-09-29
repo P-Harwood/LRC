@@ -41,12 +41,14 @@ static LRC_Config lrc_cfg = {
         {
             .persistence = 1,
             .threshold = LRC_FLOAT_TO_FXP(0.029f),
-        },
-    .dc_trip =
+        }
+#ifdef LRC_ENABLE_DC
+    ,.dc_trip =
         {
             .persistence = 1,
             .threshold = LRC_FLOAT_TO_FXP(0.029f),
         },
+#endif
 };
 
 LRC_Channel lrc_channel;

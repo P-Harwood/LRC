@@ -7,34 +7,30 @@
 
 #include <hpf.h>
 
-#define HPF_A_Q16 65023      // round(0.99218 * 65536)
-
-int32_t Hpf_run(Hpf *p_hpf, int32_t input)
+int16_t Hpf_run(Hpf *p_hpf, int16_t input)
 {
     if (!p_hpf->run_already)
     {
         p_hpf->run_already = true;
-
         p_hpf->prev_input      = input;
-        p_hpf->prev_output     = 0L;
         p_hpf->state = 0L;
     }
     else
     {
-        int32_t sum = p_hpf->state + ((input - p_hpf->prev_input) << 16);
+        /* 253/256 = 0.98828125 coefficient in Q8 format*/
+        p_hpf->state *= 253;
+        p_hpf->state += (input - p_hpf->prev_input) << 8;
+        p_hpf->state >>= 8;
 
-        p_hpf->state       = sum - (sum >> 7);
-        p_hpf->prev_input  = input;
-        p_hpf->prev_output = p_hpf->state >> 16;
+        p_hpf->prev_input = input;
     }
 
-    return p_hpf->prev_output;
+    return p_hpf->state;
 }
 
 void Hpf_reset(Hpf *p_hpf)
 {
     p_hpf->prev_input = 0L;
-    p_hpf->prev_output = 0L;
     p_hpf->state = 0L;
     p_hpf->run_already = false;
 }

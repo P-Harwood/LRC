@@ -45,10 +45,12 @@ static void Channel_hard_reset(LRC_Channel *const p_channel)
   p_channel->ac_data.raw_output = (fxp_t)0;
   p_channel->ac_data.output = (fxp_t)0;
 
+#ifdef LRC_ENABLE_DC
   p_channel->dc_data.sum = (acc_t)0;
   p_channel->dc_data.persistence_count = 0;
   p_channel->dc_data.raw_output = (fxp_t)0;
   p_channel->dc_data.output = (fxp_t)0;
+#endif
 
   LRC_Channel_Reset_Hook(p_channel);
 }
@@ -136,6 +138,7 @@ void LRC_ChannelRegister(LRC_Channel *const p_channel)
 fxp_t LRC_ChannelCoeffCompute(LRC_Channel *const p_channel, const float i_ref)
 {
   fxp_t rms_raw_snapshot = 0;
+  const fxp_t scaled_i_ref = LRC_FLOAT_TO_FXP(i_ref);
 
   LRC_CRITICAL_SECTION_PREPARE();
   LRC_CRITICAL_SECTION_ENTER();
@@ -143,7 +146,7 @@ fxp_t LRC_ChannelCoeffCompute(LRC_Channel *const p_channel, const float i_ref)
   rms_raw_snapshot = p_channel->ac_data.raw_output;
   LRC_CRITICAL_SECTION_EXIT();
 
-  return (fxp_t)((float)rms_raw_snapshot / i_ref);
+  return LRC_FXP_DIV(rms_raw_snapshot, scaled_i_ref);
 }
 
 void LRC_ChannelCoeffSet(LRC_Channel *const p_channel, const fxp_t coeff)
@@ -191,7 +194,7 @@ void LRC_CB_ADC(void)
     /****************************************************
      * UPDATE ACCUMULATORS & MEASUREMENTS
      ****************************************************/
-#if 0
+#ifdef LRC_ENABLE_DC
     /* MEAN*/
     p_channel->dc_data.sum -= (acc_t)p_channel->window.spl_buffer[p_channel->window.rd_idx];
     p_channel->dc_data.sum += (acc_t)p_channel->window.spl_buffer[p_channel->window.wr_idx];
@@ -202,13 +205,9 @@ void LRC_CB_ADC(void)
     /* RMS*/
     p_channel->ac_data.sum -= (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.rd_idx]);
     p_channel->ac_data.sum += (acc_t)LRC_SqrSpl(p_channel->window.spl_buffer[p_channel->window.wr_idx]);
-
-
-    p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc((p_channel->ac_data.sum << 6) / (uint32_t)LRC_WINDOW_BUFFER_SIZE);
-    p_channel->ac_data.raw_output <<= (FXP_FRAC_BITS - 3);
-    // Shift coefficient by Fixed point bits
-    p_channel->ac_data.output = p_channel->ac_data.raw_output / (p_channel->fp_coefficient >> FXP_FRAC_BITS);
-
+    p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc(p_channel->ac_data.sum / (LRC_WINDOW_BUFFER_SIZE));
+    p_channel->ac_data.raw_output <<= FXP_FRAC_BITS;
+    p_channel->ac_data.output = LRC_FXP_DIV(p_channel->ac_data.raw_output, p_channel->fp_coefficient);
 
     /* Post processing of AC sample, if applicable*/
     LRC_RMS_Computation_Hook(&(p_channel->ac_data.output));
@@ -217,7 +216,10 @@ void LRC_CB_ADC(void)
      * TRIP CHECK
      ****************************************************/
     Channel_trip_check(p_channel, &(p_channel->ac_data), &(p_config->ac_trip));
+
+#ifdef LRC_ENABLE_DC
     Channel_trip_check(p_channel, &(p_channel->dc_data), &(p_config->dc_trip));
+#endif
 
     /****************************************************
      * UPDATE WINDOW INDEX'S

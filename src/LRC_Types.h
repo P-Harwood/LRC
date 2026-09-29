@@ -33,8 +33,6 @@
  */
 #define LRC_WINDOW_BUFFER_SIZE (101U)
 
-#define ADC_BIT_SHIFT 8U /* Drop the first two bits */
-
 /** @brief Raw ADC sample type
  * @details This type should accomodate the raw ADC sample type.
  * @note The bit width of this type needs to be able to accomodate squaring of the sample (2x sample size in bits)
@@ -99,7 +97,10 @@ typedef struct LRC_Measurement_str
 typedef struct LRC_Config_str
 {
   LRC_TripCharacteristics ac_trip; /**< rms/ac trip behaviour*/
+
+#ifdef LRC_ENABLE_DC
   LRC_TripCharacteristics dc_trip; /**< mean/dc trip behaviour*/
+#endif
 } LRC_Config;
 
 /**
@@ -132,7 +133,10 @@ typedef struct LRC_Channel_str
   } window;
 
   LRC_Measurement ac_data; /**< measurement information for ac data*/
+
+#ifdef LRC_ENABLE_DC
   LRC_Measurement dc_data; /**< measurement information for dc data*/
+#endif
 
   fxp_t fp_coefficient;           /**< Coefficient for converting raw current value to a fixed point number format*/
 } LRC_Channel;

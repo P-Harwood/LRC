@@ -19,6 +19,8 @@ Includes
 /* Start user code for include. Do not edit comment generated here */
 #include "LRC_Core.h"
 #include "hpf.h"
+
+#define ADC_BIT_SHIFT 8U /* Drop the first two bits */
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -68,8 +70,6 @@ static void __near r_Config_ADC_interrupt(void)
 
 	/* High pass filter*/
 	lrc_channel.inputs.i_sample = Hpf_run(&l_hpf, lrc_channel.inputs.i_sample);
-
-    /* (TODO: implement HPF)*/
 
     /* Enter LRC state machine*/
 	LRC_CB_ADC();

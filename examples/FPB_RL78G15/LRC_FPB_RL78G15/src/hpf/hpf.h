@@ -14,9 +14,8 @@
 /** @brief Trapezoidal integration structure*/
 typedef struct Hpf_str
 {
-  int32_t prev_input;
-  int32_t prev_output;
-  int32_t state;
+  int16_t prev_input;
+  int16_t state;
   bool run_already;
 } Hpf;
 
@@ -26,7 +25,7 @@ typedef struct Hpf_str
  * @param input - latest input signal.
  * @return output of hpf.
  */
-int32_t Hpf_run(Hpf *p_hpf, int32_t input);
+int16_t Hpf_run(Hpf *p_hpf, int16_t input);
 
 /**
  * @brief Resets hpf

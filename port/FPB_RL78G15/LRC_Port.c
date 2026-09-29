@@ -22,9 +22,9 @@ void LRC_RMS_Computation_Hook(fxp_t *p_rms)
   /* TODO: Populate*/
 }
 
-uint32_t LRC_SqrSpl(spl_t spl)
+spl_t LRC_SqrSpl(spl_t spl)
 {
-  return (uint32_t)spl * spl;
+  return spl * spl;
 }
 
 acc_t LRC_SqrtAcc(acc_t acc)
@@ -47,15 +47,11 @@ acc_t LRC_SqrtAcc(acc_t acc)
 void LRC_Trip(LRC_Channel *p_channel)
 {
   (void)p_channel;
-  /* SET GPIO*/
-  P2_bit.no0 = 0U;
 }
 
 void LRC_NoTrip(LRC_Channel *p_channel)
 {
   (void)p_channel;
-  /* RESET GPIO*/
-  P2_bit.no0 = 1U;
 }
 
 void LRC_ADC_Init(void)
