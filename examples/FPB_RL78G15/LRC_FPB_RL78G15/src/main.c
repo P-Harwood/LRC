@@ -112,6 +112,9 @@ void main(void)
 
   while (1)
   {
+	  LRC_CRITICAL_SECTION_PREPARE();
+	  static volatile int16_t l_adc_ready = false;
+
       /* Transmit meta on request*/
       if(transmit_meta)
       {
@@ -126,11 +129,15 @@ void main(void)
     	  sw_pressed = false;
       }
 
+	  LRC_CRITICAL_SECTION_ENTER();
+	  l_adc_ready = adc_ready;
+	  LRC_CRITICAL_SECTION_EXIT();
+
       /* Transmit new data if ADC reading completed*/
-      if(adc_ready)
+      if(l_adc_ready)
       {
-  		static volatile spl_t l_raw_adc = 0;
-  		static volatile spl_t l_hpf_adc = 0;
+  		static volatile int16_t l_raw_adc = 0;
+  		static volatile uint16_t l_hpf_adc = 0;
 		static volatile fxp_t l_rms = 0;
 
 		LRC_CRITICAL_SECTION_PREPARE();
@@ -143,7 +150,7 @@ void main(void)
 
 		/* Add data fields*/
 		Csvbin_add_field(&csvbuf, (uint8_t*)&l_raw_adc, sizeof(uint16_t));
-		Csvbin_add_field(&csvbuf, (uint8_t*)&l_hpf_adc, sizeof(spl_t));
+		Csvbin_add_field(&csvbuf, (uint8_t*)&l_hpf_adc, sizeof(int16_t));
 		Csvbin_add_field(&csvbuf, (uint8_t*)&l_rms, sizeof(fxp_t));
 
 		/* Terminate & Transmit*/

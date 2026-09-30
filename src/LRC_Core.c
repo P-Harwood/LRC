@@ -192,7 +192,7 @@ void LRC_CB_ADC(void)
      * UPDATE ACCUMULATORS & MEASUREMENTS
      ****************************************************/
 	/* RMS*/
-	p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.wr_idx] = LRC_SqrSpl(p_channel->inputs.iac_sample);
+	p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.wr_idx] = p_channel->inputs.iac_sample * p_channel->inputs.iac_sample;
 	p_channel->ac_data.sum -= (acc_t)p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.rd_idx];
 	p_channel->ac_data.sum += (acc_t)p_channel->ac_data.window.spl_buffer[p_channel->ac_data.window.wr_idx];
 	p_channel->ac_data.raw_output = (fxp_t)LRC_SqrtAcc(p_channel->ac_data.sum / (LRC_WINDOW_BUFFER_SIZE));

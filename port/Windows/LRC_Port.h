@@ -50,13 +50,6 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel);
 /******************
  * MATHS
  ******************/
-/**
- * @brief performs a square operation on the sample
- * @param[in] spl - Sample to perform the square on
- *
- * @return square of spl
- */
-spl_t LRC_SqrSpl(spl_t spl);
 
 /**
  * @brief performs a square root operation on the accumulator type.

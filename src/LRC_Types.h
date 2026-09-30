@@ -40,7 +40,7 @@
  * e.g., with 10b samples & FXP_FRAC_BITS = 15, squaring gives us 10 * 2 = 20, but shifting gives us 10 + 15 = 25.
  * so the spl_t must be at least 25b
  */
-typedef int16_t spl_t;
+typedef int32_t spl_t;
 
 /** @brief Accumulator type
  * @details This type should accomodate the accumulation of the product of raw ADC sample types.
@@ -76,8 +76,8 @@ typedef uint32_t fxp_t;
 typedef struct LRC_Window_str
 {
   spl_t spl_buffer[LRC_WINDOW_BUFFER_SIZE];    /**< Buffer to hold the samples */
-  uint32_t wr_idx;                             /**< Write index of the buffer*/
-  uint32_t rd_idx;                             /**< Read index of the buffer*/
+  uint16_t wr_idx;                             /**< Write index of the buffer*/
+  uint16_t rd_idx;                             /**< Read index of the buffer*/
 } LRC_Window;
 
 /**
@@ -86,7 +86,7 @@ typedef struct LRC_Window_str
  */
 typedef struct LRC_TripCharacteristics_str
 {
-  uint32_t persistence; /**< Consecutive computations that exceed threshold to cause a trip*/
+  uint16_t persistence; /**< Consecutive computations that exceed threshold to cause a trip*/
   fxp_t threshold;      /**< Threshold for to be considered a trip*/
 } LRC_TripCharacteristics;
 
@@ -97,7 +97,7 @@ typedef struct LRC_Measurement_str
 {
   LRC_Window window;		  /**< Window of samples for the measurment*/
   acc_t sum;                  /**< Current accumulated value*/
-  uint32_t persistence_count; /**< Counter to count the number of persistent "Over Thresholds" have ocurred*/
+  uint16_t persistence_count; /**< Counter to count the number of persistent "Over Thresholds" have ocurred*/
   fxp_t raw_output;           /**< variable to store the latest measurement computed BEFORE coefficient adjustment*/
   fxp_t output;               /**< variable to store the latest measurement computed AFTER coefficient adjustment*/
 } LRC_Measurement;

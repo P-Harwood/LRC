@@ -25,11 +25,6 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel)
   channel0_lpf.prev_output = 0;
 }
 
-spl_t LRC_SqrSpl(spl_t spl)
-{
-  return spl * spl;
-}
-
 acc_t LRC_SqrtAcc(acc_t acc)
 {
   uint64_t rem = 0, root = 0, acc_tmp = (uint64_t)acc;
