@@ -27,12 +27,13 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel)
 
 acc_t LRC_SqrtAcc(acc_t acc)
 {
-  uint64_t rem = 0, root = 0, acc_tmp = (uint64_t)acc;
-
-  for (uint8_t i = 32; i > 0; i--)
+  uint32_t rem = 0, root = 0, acc_tmp = (uint32_t)acc;
+  const uint8_t BITS = sizeof(acc) * 8;
+  const uint8_t BITS_DIV2 = BITS / 2;
+  for (uint8_t i = BITS_DIV2; i > 0; i--)
   {
     root <<= 1;
-    rem = (rem << 2) | (acc_tmp >> (64 - 2));
+    rem = (rem << 2) | (acc_tmp >> (BITS - 2));
     acc_tmp <<= 2;
     if (root < rem)
     {
@@ -40,7 +41,7 @@ acc_t LRC_SqrtAcc(acc_t acc)
       root += 2;
     }
   }
-  return (uint32_t)(root >> 1);
+  return (acc_t)(root >> 1);
 }
 
 void LRC_Trip(LRC_Channel *p_channel)
