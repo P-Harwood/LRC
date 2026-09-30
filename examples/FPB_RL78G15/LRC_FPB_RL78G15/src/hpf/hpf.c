@@ -17,12 +17,12 @@ int32_t Hpf_run(Hpf *p_hpf, int32_t input)
     }
     else
     {
-        /* 64768/65536 = 0.98828125 coefficient in Q16 format*/
-        p_hpf->state = ((int32_t)64768 *
+        /* 253/256 = 0.98828125 coefficient in Q8 format*/
+        p_hpf->state = ((int32_t)253 *
                 (p_hpf->state +
                  (((int32_t)input -
-                   (int32_t)p_hpf->prev_input) << 16L)))
-            >> 16L;
+                   (int32_t)p_hpf->prev_input) << 8L)))
+            >> 8L;
         p_hpf->prev_input = input;
     }
 
