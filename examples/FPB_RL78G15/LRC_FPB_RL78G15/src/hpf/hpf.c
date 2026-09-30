@@ -17,15 +17,15 @@ int32_t Hpf_run(Hpf *p_hpf, int32_t input)
     }
     else
     {
-        /* 253/256 = 0.98828125 coefficient in Q16 format*/
+        /* 64768/65536 = 0.98828125 coefficient in Q16 format*/
         p_hpf->state *= (int32_t)64768;
-        p_hpf->state += (input - p_hpf->prev_input) << 16;
         p_hpf->state >>= 16;
+        p_hpf->state += (input - p_hpf->prev_input) << 16;
 
         p_hpf->prev_input = input;
     }
 
-    return p_hpf->state;
+    return p_hpf->state >> 16;
 }
 
 void Hpf_reset(Hpf *p_hpf)
