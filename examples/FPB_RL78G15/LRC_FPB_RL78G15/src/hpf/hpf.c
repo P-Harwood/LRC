@@ -25,7 +25,7 @@ int32_t Hpf_run(Hpf *p_hpf, int32_t input)
                    (int32_t)p_hpf->prev_input) << 8L)))
             >> 8L;
         p_hpf->prev_input = input;
-        p_hpf->prev_output = p_hpf->state >> 16L;
+        p_hpf->prev_output = p_hpf->state >> 8L;
     }
 
     return p_hpf->prev_output;
