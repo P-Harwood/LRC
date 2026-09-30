@@ -18,7 +18,7 @@ void LRC_Channel_Reset_Hook(LRC_Channel *p_channel)
 
 acc_t LRC_SqrtAcc(acc_t acc)
 {
-  uint32_t rem = 0, root = 0, acc_tmp = (uint32_t)acc;
+	acc_t rem = 0, root = 0, acc_tmp = (acc_t)acc;
   const uint8_t BITS = sizeof(acc) * 8;
   const uint8_t BITS_DIV2 = BITS / 2;
   for (uint8_t i = BITS_DIV2; i > 0; i--)
